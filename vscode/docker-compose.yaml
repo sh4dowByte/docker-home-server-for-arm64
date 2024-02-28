@@ -1,0 +1,52 @@
+name: vscode
+services:
+  code-server:
+    cpu_shares: 90
+    command: []
+    container_name: code-server
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    environment:
+      - DEFAULT_WORKSPACE=/config/workspace
+      - HASHED_PASSWORD=
+      - PASSWORD=juhdi123
+      - PGID=1000
+      - PROXY_DOMAIN=code-server.my.domain
+      - PUID=1000
+      - SUDO_PASSWORD=juhdi123
+      - SUDO_PASSWORD_HASH=
+      - TZ=Etc/UTC
+    hostname: code-server
+    image: lscr.io/linuxserver/code-server:latest
+    ports:
+      - mode: ingress
+        target: 8443
+        published: "8443"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /config/vscode
+        target: /config
+        bind:
+          create_host_path: true
+    devices: []
+    cap_add: []
+    networks:
+      - default
+    privileged: false
+networks:
+  default:
+    name: vscode_default
+x-casaos:
+  author: self
+  category: self
+  hostname: ""
+  icon: https://upload.wikimedia.org/wikipedia/commons/9/9a/Visual_Studio_Code_1.35_icon.svg
+  index: /
+  port_map: "8443"
+  scheme: http
+  title:
+    custom: VsCode

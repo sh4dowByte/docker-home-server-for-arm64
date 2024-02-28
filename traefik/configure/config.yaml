@@ -1,0 +1,101 @@
+http:
+  routers:
+    dashboard:
+      entryPoints:
+        - websecure
+      rule: "Host(`dashboard.local.juhdi.my.id`)"
+      middlewares:
+        - default-headers
+      tls: {}
+      service: dashboard
+    portainer:
+      entryPoints:
+        - websecure
+      rule: "Host(`portainer.local.juhdi.my.id`)"
+      middlewares:
+        - default-headers
+      tls: {}
+      service: portainer
+    local:
+      entryPoints:
+        - websecure
+      rule: "Host(`local.juhdi.my.id`)"
+      middlewares:
+        - default-headers
+      tls: {}
+      service: local
+    notes:
+      entryPoints:
+        - websecure
+      rule: "Host(`notes.local.juhdi.my.id`)"
+      middlewares:
+        - default-headers
+      tls: {}
+      service: notes
+    utmbk:
+      entryPoints:
+        - websecure
+      rule: "Host(`utmbk.local.juhdi.my.id`)"
+      middlewares:
+        - default-headers
+      tls: {}
+      service: utmbk
+    drive:
+      entryPoints:
+        - websecure
+      rule: "Host(`drive.local.juhdi.my.id`)"
+      middlewares:
+        - default-headers
+      tls: {}
+      service: drive
+
+  middlewares:
+    https-redirect:
+      redirectScheme:
+        scheme: http
+
+    default-headers:
+      headers:
+        frameDeny: true
+        sslRedirect: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 15552000
+        customFrameOptionsValue: SAMEORIGIN
+        customRequestHeaders:
+          X-Forwarded-Proto: https
+
+  services:
+    dashboard:
+      loadBalancer:
+        servers:
+          - url: "http://juhdi.lan:8081"
+        passHostHeader: true
+    portainer:
+      loadBalancer:
+        servers:
+          - url: "http://juhdi.lan:9000"
+        passHostHeader: true
+    local:
+      loadBalancer:
+        servers:
+          - url: "http://juhdi.lan:80"
+        passHostHeader: true
+    utmbk:
+      loadBalancer:
+        servers:
+          - url: "http://juhdi.lan:80"
+        passHostHeader: true
+    drive:
+      loadBalancer:
+        servers:
+          - url: "http://juhdi.lan:10081"
+        passHostHeader: true
+    notes:
+      loadBalancer:
+        servers:
+          - url: "http://juhdi.lan:6806"
+        passHostHeader: true

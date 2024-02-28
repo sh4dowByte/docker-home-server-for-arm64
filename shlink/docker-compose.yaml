@@ -1,0 +1,48 @@
+name: shlink
+services:
+  shlink:
+    environment:
+      - DB_DRIVER=mysql
+      - DB_HOST=juhdi.lan
+      - DB_NAME=shlink
+      - DB_PASSWORD=root
+      - DB_USER=root
+      - DEFAULT_DOMAIN=link.juhdi.my.id
+      - GEOLITE_LICENSE_KEY=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
+      - IS_HTTPS_ENABLED=true
+      - TZ=Europe/Berlin
+    image: shlinkio/shlink:stable
+    ports:
+      - mode: ingress
+        target: 8080
+        published: "8182"
+        protocol: tcp
+        host_ip: ""
+    restart: always
+    volumes: []
+    devices: []
+    cap_add: []
+    command: []
+    networks:
+      - default
+    privileged: false
+    container_name: ""
+    hostname: ""
+    cpu_shares: 90
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+networks:
+  default:
+    name: shlink_default
+x-casaos:
+  hostname: "app.shlink.io"
+  scheme: https
+  index: ''
+  port_map: "443"
+  author: self
+  category: self
+  icon: "https://app.shlink.io/favicon.ico"
+  title:
+    custom: Shlink

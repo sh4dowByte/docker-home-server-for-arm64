@@ -1,0 +1,47 @@
+name: illustrious_thomas
+services:
+  aria2-ariang:
+    cpu_shares: 90
+    command: []
+    container_name: aria2-ui
+    deploy:
+      resources:
+        limits:
+          memory: 1865M
+    environment:
+      - ARIA2RPCPORT=8082
+      - PGID=1000
+      - PUID=1000
+      - RPC_SECRET=NOBODYKNOWSME
+    hostname: aria2-ui
+    image: hurlenko/aria2-ariang
+    ports:
+      - target: 8080
+        published: "8082"
+        protocol: tcp
+      - target: 6800
+        published: "6800"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/Downloads
+        target: /aria2/data
+      - type: bind
+        source: /config/aria2
+        target: /aria2/conf
+    devices: []
+    cap_add: []
+    network_mode: bridge
+    privileged: false
+x-casaos:
+  author: self
+  category: self
+  hostname: ""
+  icon: https://raw.githubusercontent.com/mayswind/AriaNg-Native/master/assets/AriaNg.ico
+  index: /
+  port_map: "8082"
+  scheme: http
+  store_app_id: illustrious_thomas
+  title:
+    custom: Aria Downloader

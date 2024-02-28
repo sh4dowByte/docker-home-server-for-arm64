@@ -1,0 +1,92 @@
+name: drone
+services:
+  drone:
+    cpu_shares: 90
+    command: []
+    container_name: drone
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    environment:
+      - DRONE_DATABASE_DATASOURCE=/data/database.sqlite
+      - DRONE_DATABASE_DRIVER=sqlite3
+      - DRONE_GIT_ALWAYS_AUTH=false
+      - DRONE_GITEA_CLIENT_ID=382e11c8-3c58-485a-92e2-4181bc1ffce1
+      - DRONE_GITEA_CLIENT_SECRET=gto_lczqsriiunrnzvubj4zpkw7mq2cvo7wtbyz5s7fqr23zenuh2e4q
+      - DRONE_GITEA_SERVER=https://git.juhdi.my.id/
+      - DRONE_RPC_SECRET=c563511fc7eacbfdfec1d4dab25c7e91
+      - DRONE_SERVER_HOST=ci.juhdi.my.id
+      - DRONE_SERVER_PROTO=https
+      - DRONE_TLS_AUTOCERT=false
+      - DRONE_USER_CREATE=username:juhdi,machine:false,admin:true,token:c563511fc7eacbfdfec1d4dab25c7e91
+    hostname: drone
+    image: drone/drone
+    ports:
+      # - mode: ingress
+      #   target: 443
+      #   published: "443"
+      #   protocol: tcp
+      - mode: ingress
+        target: 80
+        published: "8084"
+        protocol: tcp
+    restart: always
+    volumes:
+      - type: bind
+        source: /var/lib/drone
+        target: /data
+        bind:
+          create_host_path: true
+    devices: []
+    cap_add: []
+    networks:
+      - default
+    privileged: false
+  drone-runner:
+    cpu_shares: 90
+    command: []
+    container_name: ssh-runner
+    deploy:
+      resources:
+        limits:
+          memory: 1865M
+    environment:
+      - DRONE_LOGS_DEBUG=true
+      - DRONE_RPC_HOST=192.168.88.10:8084
+      - DRONE_RPC_PROTO=HTTP
+      - DRONE_RPC_SECRET=c563511fc7eacbfdfec1d4dab25c7e91
+      - DRONE_RUNNER_CAPACITY=2
+      - DRONE_RUNNER_NAME=drone_docker_runner
+    hostname: ssh-runner
+    image: drone/drone-runner-docker
+    ports:
+      - mode: ingress
+        target: 3000
+        published: "3100"
+        protocol: tcp
+    restart: always
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        bind:
+          create_host_path: true
+    devices: []
+    cap_add: []
+    networks:
+      - default
+    privileged: false
+networks:
+  default:
+    name: drone2_default
+x-casaos:
+  author: self
+  category: self
+  hostname: ci.juhdi.my.id
+  icon: https://ci.juhdi.my.id/static/media/logo.76c744d4.svg
+  index: /
+  port_map: "443"
+  scheme: https
+  title:
+    custom: Drone CI/CD

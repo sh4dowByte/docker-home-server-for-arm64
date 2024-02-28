@@ -1,0 +1,53 @@
+name: mongodb
+services:
+  mongodb:
+    environment:
+      - MONGO_INITDB_DATABASE=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_ROOT_USERNAME=root
+    image: webhippie/mongodb:4.0-arm64
+    ports:
+      - mode: ingress
+        target: 27017
+        published: "27017"
+        protocol: tcp
+        host_ip: ""
+    volumes:
+      - type: bind
+        source: /home/docker/mongodb/mongo/database
+        target: /data/db
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /home/docker/mongodb/mongo/init-mongo.js
+        target: /docker-entrypoint-initdb.d/init-mongo.js
+        read_only: true
+        bind:
+          create_host_path: true
+    devices: []
+    cap_add: []
+    command: []
+    networks:
+      - default
+    privileged: false
+    restart: unless-stopped
+    container_name: ""
+    hostname: ""
+    cpu_shares: 90
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+networks:
+  default:
+    name: mongodb_default
+x-casaos:
+  hostname: ""
+  scheme: http
+  index: /
+  port_map: "27017"
+  author: self
+  category: self
+  icon: "https://img.icons8.com/?size=64&id=8rKdRqZFLurS&format=png"
+  title:
+    custom: Mongo DB

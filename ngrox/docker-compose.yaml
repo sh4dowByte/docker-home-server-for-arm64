@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  ngrok:
+    # command: 'tcp juhdi.lan:4444'
+    # command: 'tcp juhdi.lan:22'
+    command: 'http --domain fitting-deciding-shark.ngrok-free.app juhdi.lan:80'
+    # command: 'tunnel --label edge=edghts_2cdGnsmhytPKXO254PfaVbOsNss http://juhdi.lan:80'
+    image: 'ngrok/ngrok:latest'
+    ports:
+      - "4040:4040" 
+    environment:
+      - NGROK_PORT=80  # Port of the local web server to expose
+      - NGROK_REGION=us  # Change to your preferred ngrok region
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    tty: true
+    stdin_open: true
+
+x-casaos:
+  author: self
+  category: self
+  hostname: ""
+  icon: "https://avatars.githubusercontent.com/u/10625446?s=200&v=4"
+  index: /
+  port_map: "4040"
+  scheme: http
+  title:
+    custom: Ngrox SSH

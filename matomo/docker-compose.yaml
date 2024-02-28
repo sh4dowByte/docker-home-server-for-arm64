@@ -1,0 +1,53 @@
+name: matomo
+services:
+  matomo:
+    cpu_shares: 90
+    command: []
+    container_name: matomo
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    environment:
+      - LETSENCRYPT_EMAIL=email@something.ext
+      - LETSENCRYPT_HOST=stats.mysite.ext
+      - MATOMO_DATABASE_ADAPTER=mysql
+      - MATOMO_DATABASE_DBNAME=matomo
+      - MATOMO_DATABASE_HOST=192.168.88.10
+      - MATOMO_DATABASE_PASSWORD=
+      - MATOMO_DATABASE_TABLES_PREFIX=matomo_
+      - MATOMO_DATABASE_USERNAME=matomo
+      - MYSQL_DATABASE=matomo
+      - MYSQL_PASSWORD=root
+      - MYSQL_USER=root
+      - VIRTUAL_HOST=stats.mysite.ext
+    env_file:
+      - /home/docker/matomo/db.env
+    hostname: matomo
+    image: matomo
+    ports:
+      - mode: ingress
+        target: 80
+        published: "8086"
+        protocol: tcp
+    restart: unless-stopped
+    volumes: []
+    devices: []
+    cap_add: []
+    networks:
+      - net
+    privileged: false
+networks:
+  net:
+    name: matomo_net
+    driver: bridge
+x-casaos:
+  author: self
+  category: self
+  hostname: ""
+  icon: https://w7.pngwing.com/pngs/36/953/png-transparent-matomo-full-logo-tech-companies-thumbnail.png
+  index: /
+  port_map: "8086"
+  scheme: http
+  title:
+    custom: Matomo

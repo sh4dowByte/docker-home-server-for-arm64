@@ -1,0 +1,53 @@
+name: paperless
+services:
+  paperless-ngx:
+    cpu_shares: 90
+    command: []
+    container_name: paperless-ngx
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - REDIS_URL=
+      - TZ=America/New_York
+    hostname: paperless-ngx
+    image: lscr.io/linuxserver/paperless-ngx:latest
+    ports:
+      - mode: ingress
+        target: 8000
+        published: "8008"
+        protocol: tcp
+        host_ip: ""
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /path/to/appdata/config
+        target: /config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /path/to/appdata/data
+        target: /data
+        bind:
+          create_host_path: true
+    devices: []
+    cap_add: []
+    networks:
+      - default
+    privileged: false
+networks:
+  default:
+    name: paperless_default
+x-casaos:
+  author: self
+  category: self
+  hostname: ""
+  icon: ""
+  index: /
+  port_map: "8008"
+  scheme: http
+  title:
+    custom: Paperless

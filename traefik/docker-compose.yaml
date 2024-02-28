@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+  traefik:
+    image: "traefik:latest"
+    container_name: "traefik"
+    restart: always
+    ports:
+      - "8088:80"
+      - "9099:9099"
+      - "443:443"
+    # command:
+    #   - "--providers.docker"
+    #   - "--log.level=DEBUG"
+    #   - "--log.filePath=/logs/traefik.log" 
+      
+    #   - "--metrics.prometheus=true"
+    #   - "--metrics.prometheus.entryPoint=metrics"
+    #   - "--entryPoints.metrics.address=:8082"
+    volumes:
+      - ${PWD}/configure:/etc/traefik
+      - traefik-ssl-certs:/ssl-certs
+      - /etc/localtime:/etc/localtime
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./logs/:/logs/
+    environment:
+      - TZ-Asia/Jakarta
+      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
+      - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.local.juhdi.my.id`)"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.ssl-header.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.traefik.middlewares=https-redirect"
+      - "traetik.http.routers.traetik-secure.entrypoints=websecure"
+      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.local.juhdi.my.id`)"
+      - "traefik.http.routers.traefik-secure.tls=true"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].main=local.juhdi.my.id"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.local.juhdi.my.id"
+      - "traefik.http.routers.traefik-secure.service=api@internal"
+    networks:
+      - backend
+
+volumes:
+  traefik-ssl-certs:
+    driver: local
+    name: traefik-ssl-certs
+
+networks:
+  backend:
+    name: backend
+
+x-casaos:
+  index: "/"
+  scheme: https
+  hostname: "traefik.local.juhdi.my.id"
+  port_map: "443"
+  author: self
+  category: self
+  icon: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Traefik.logo.png"
+  title:
+    custom: Traefik

@@ -1,0 +1,53 @@
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false
+
+api:
+  dashboard: true
+  debug: true
+
+entryPoints:
+  web:
+    address: :8088
+  websecure:
+    address: :443
+  metrics:
+    address: :9099
+
+serversTransport:
+  insecureSkipVerify: true
+
+certificatesResolvers:
+  cloudflare:
+    acme:
+      email: ahmadjuhdi007@gmail.com
+      storage: /ssl-certs/acme.json
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+      dnsChallenge:
+        provider: cloudflare
+        resolvers:
+          - "1.1.1.1:53"
+          - "1.0.0.1:53"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+  file:
+    directory: /etc/traefik
+    watch: true
+
+metrics:
+  prometheus:
+    entryPoint: metrics
+    buckets:
+      - 0.1
+      - 0.3
+      - 1.2
+      - 5.0
+    addEntryPointsLabels: true
+    addRoutersLabels: true
+    addServicesLabels: true
+
+accessLog:
+  filePath: "/etc/traefik/access_log_me.log"

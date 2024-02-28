@@ -1,0 +1,83 @@
+name: influxdb
+services:
+  influxdb:
+    container_name: influxdb2
+    image: influxdb:latest
+    ports:
+      - mode: ingress
+        target: 8086
+        published: "8086"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /mnt/influxdb/data
+        target: /var/lib/influxdb2
+        bind:
+          create_host_path: true
+    devices: []
+    cap_add: []
+    command: []
+    environment: []
+    networks:
+      - default
+    privileged: false
+    hostname: influxdb2
+    cpu_shares: 90
+    deploy:
+      resources:
+        limits:
+          memory: 1865M
+  telegraf:
+    container_name: telegraf
+    depends_on:
+      influxdb:
+        condition: service_started
+        required: true
+    image: telegraf:latest
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/influxdb/telegraf.conf
+        target: /etc/telegraf/telegraf.conf
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/influxdb
+        target: /tmp
+        bind:
+          create_host_path: true
+    ports: []
+    devices: []
+    cap_add: []
+    command: []
+    environment: []
+    networks:
+      - default
+    privileged: false
+    hostname: telegraf
+    cpu_shares: 90
+    deploy:
+      resources:
+        limits:
+          memory: 1865M
+networks:
+  default:
+    name: influxdb_default
+x-casaos:
+  hostname: ""
+  scheme: http
+  index: /
+  port_map: "8086"
+  author: self
+  category: self
+  icon: "https://img.icons8.com/?size=64&id=vbRhdWc14BX1&format=png"
+  title:
+    custom: InfluxDb

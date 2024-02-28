@@ -1,0 +1,60 @@
+name: homarr
+services:
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
+    ports:
+      - mode: ingress
+        target: 7575
+        published: "7575"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /home/docker/homarr/homarr/configs
+        target: /app/data/configs
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /home/docker/homarr/homarr/icons
+        target: /app/public/icons
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /home/docker/homarr/homarr/data
+        target: /data
+        bind:
+          create_host_path: true
+    devices: []
+    cap_add: []
+    command: []
+    environment: []
+    networks:
+      - homarr
+    privileged: false
+    hostname: homarr
+    cpu_shares: 90
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+networks:
+  default:
+    name: homarr_default
+  homarr:
+    name: homarr
+x-casaos:
+  hostname: ""
+  scheme: http
+  index: /
+  port_map: "7575"
+  author: self
+  category: self
+  icon: "https://homarr.dev/img/logo.png"
+  title:
+    custom: Homarr
