@@ -19,6 +19,7 @@ services:
     #   - "--entryPoints.metrics.address=:8082"
     volumes:
       - ${PWD}/configure:/etc/traefik
+      - ${PWD}/logs:/etc/logs
       - traefik-ssl-certs:/ssl-certs
       - /etc/localtime:/etc/localtime
       - /var/run/docker.sock:/var/run/docker.sock:ro

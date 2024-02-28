@@ -50,4 +50,4 @@ metrics:
     addServicesLabels: true
 
 accessLog:
-  filePath: "/etc/traefik/access_log_me.log"
+  filePath: "/etc/logs/access_log.log"
