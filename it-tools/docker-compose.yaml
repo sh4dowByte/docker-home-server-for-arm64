@@ -1,0 +1,36 @@
+name: interesting_aleksander
+services:
+  main_app:
+    cpu_shares: 10
+    command: []
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    image: corentinth/it-tools:latest
+    labels:
+      icon: https://icon.casaos.io/main/all/it-tools.png
+    ports:
+      - target: 80
+        published: "8181"
+        protocol: tcp
+    restart: unless-stopped
+    volumes: []
+    devices: []
+    cap_add: []
+    environment: []
+    network_mode: bridge
+    privileged: false
+    container_name: ""
+    hostname: ""
+x-casaos:
+  author: self
+  category: self
+  hostname: ""
+  icon: https://img.icons8.com/?size=64&id=20544&format=png
+  index: /
+  port_map: "8181"
+  scheme: http
+  store_app_id: interesting_aleksander
+  title:
+    custom: IT Tools
