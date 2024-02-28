@@ -11,11 +11,11 @@ services:
     environment:
       - DEFAULT_WORKSPACE=/config/workspace
       - HASHED_PASSWORD=
-      - PASSWORD=juhdi123
+      - PASSWORD=${PASSWORD}
       - PGID=1000
       - PROXY_DOMAIN=code-server.my.domain
       - PUID=1000
-      - SUDO_PASSWORD=juhdi123
+      - SUDO_PASSWORD=${SUDO_PASSWORD}
       - SUDO_PASSWORD_HASH=
       - TZ=Etc/UTC
     hostname: code-server

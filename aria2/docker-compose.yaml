@@ -12,7 +12,7 @@ services:
       - ARIA2RPCPORT=8082
       - PGID=1000
       - PUID=1000
-      - RPC_SECRET=NOBODYKNOWSME
+      - RPC_SECRET=${RPC_SECRET}
     hostname: aria2-ui
     image: hurlenko/aria2-ariang
     ports:

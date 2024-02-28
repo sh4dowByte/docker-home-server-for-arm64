@@ -12,14 +12,14 @@ services:
       - DRONE_DATABASE_DATASOURCE=/data/database.sqlite
       - DRONE_DATABASE_DRIVER=sqlite3
       - DRONE_GIT_ALWAYS_AUTH=false
-      - DRONE_GITEA_CLIENT_ID=382e11c8-3c58-485a-92e2-4181bc1ffce1
-      - DRONE_GITEA_CLIENT_SECRET=gto_lczqsriiunrnzvubj4zpkw7mq2cvo7wtbyz5s7fqr23zenuh2e4q
-      - DRONE_GITEA_SERVER=https://git.juhdi.my.id/
-      - DRONE_RPC_SECRET=c563511fc7eacbfdfec1d4dab25c7e91
-      - DRONE_SERVER_HOST=ci.juhdi.my.id
+      - DRONE_GITEA_CLIENT_ID=${DRONE_GITEA_CLIENT_ID}
+      - DRONE_GITEA_CLIENT_SECRET=${DRONE_GITEA_CLIENT_SECRET}
+      - DRONE_GITEA_SERVER=${DRONE_GITEA_SERVER}
+      - DRONE_RPC_SECRET=${DRONE_RPC_SECRET}
+      - DRONE_SERVER_HOST=${DRONE_SERVER_HOST}
+      - DRONE_USER_CREATE=${DRONE_USER_CREATE}
       - DRONE_SERVER_PROTO=https
       - DRONE_TLS_AUTOCERT=false
-      - DRONE_USER_CREATE=username:juhdi,machine:false,admin:true,token:c563511fc7eacbfdfec1d4dab25c7e91
     hostname: drone
     image: drone/drone
     ports:
@@ -53,9 +53,9 @@ services:
           memory: 1865M
     environment:
       - DRONE_LOGS_DEBUG=true
-      - DRONE_RPC_HOST=192.168.88.10:8084
+      - DRONE_RPC_HOST=${DRONE_SERVER_HOST}
       - DRONE_RPC_PROTO=HTTP
-      - DRONE_RPC_SECRET=c563511fc7eacbfdfec1d4dab25c7e91
+      - DRONE_RPC_SECRET=${DRONE_RPC_SECRET}
       - DRONE_RUNNER_CAPACITY=2
       - DRONE_RUNNER_NAME=drone_docker_runner
     hostname: ssh-runner

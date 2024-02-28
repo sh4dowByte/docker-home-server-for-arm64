@@ -97,6 +97,7 @@ services:
       - monitoring
     ports:
       - 3003:3000
+
 x-casaos:
   hostname: ""
   scheme: http
