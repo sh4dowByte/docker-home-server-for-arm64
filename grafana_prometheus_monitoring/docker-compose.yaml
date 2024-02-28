@@ -1,0 +1,109 @@
+version: '3'
+
+volumes:
+  prometheus_data:
+    name: prometheus_data
+    driver: local
+
+  grafana_data:
+    name: grafana_data
+    driver: local
+
+networks:
+  monitoring:
+    external: true
+  backend:
+    external: true
+
+name: monitoring
+services:
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    restart: unless-stopped
+    volumes:
+      - 'prometheus_data:/prometheus'
+      # - './data/prometheus:/prometheus'
+      - './config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      - monitoring
+    ports:
+      - 9092:9090
+    # labels:
+    #   - 'traefik.enable=true'
+    #   - 'traefik.http.routers.prometheus.entrypoints=web'
+    #   - 'traefik.http.routers.prometheus.rule-Host(`prometheus.juhdi.my.id`)'
+    #   - 'traefik.http.middlewares.https-redirect.redirectscheme.scheme=https'
+    #   - 'traefik.http.middlewares.ssl-header.headers.customrequestheaders.X-Forwarded-Proto=https'
+    #   - 'traefik.http.routers.prometheus.middlewares=https-redirect'
+    #   - 'traetik.http.routers.prometheus-secure.entrypoints=websecure'
+    #   - 'traefik.http.routers.prometheus-secure.rule-Host(`prometheus.juhdi.my.id`)'
+    #   - 'traefik.http.services.prometheus.loadbalancer.server.port=9090'
+    #   - 'traefik.http.routers.prometheus-secure.service=prometheus'
+    #   - 'traefik.http.routers.prometheus-secure.tls=true'
+    # networks:
+    #   - backend
+
+  snmpexporter:
+    container_name: snmpexporter
+    image: prom/snmp-exporter
+    restart: unless-stopped
+    networks:
+      - monitoring
+    ports:
+      - 9116:9116
+      
+  mysqldexporter:
+    container_name: mysqldexporter
+    image: prom/mysqld-exporter
+    restart: unless-stopped
+    networks:
+      - monitoring
+    ports:
+      - 9104:9104
+    command:
+      - "--mysqld.username=${mysql_username}:${mysql_password}"
+      - "--mysqld.address=${mysql_address}:${mysql_port}"
+    volumes:
+      - './config/mysql-exporter/.my.cnf:/root/.my.cnf'
+    environment: 
+      - DATA_SOURCE_NAME='${mysql_username}@(192.168.88.10:9104)/db'
+      - collect.info_schema.tablestats=true
+      - collect.info_schema.userstats=true
+      - collect.info_schema.query_response_time=true
+      - collect.auto_increment.columns=true
+      - collect.binlog_size=true
+      - collect.perf_schema.eventsstatements=true
+      - collect.perf_schema.eventswaits=true
+      - collect.perf_schema.file_events=true
+      - collect.perf_schema.indexiowaits=true
+      - collect.perf_schema.tableiowaits=true
+      - collect.perf_schema.tablelocks=true
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    restart: unless-stopped
+    volumes:
+      - 'grafana_data:/var/lib/grafana'
+      # - './data/grafana:/var/lib/grafana'
+      - './config/grafana:/etc/grafana/provisioning/datasources'
+    networks:
+      - monitoring
+    ports:
+      - 3003:3000
+x-casaos:
+  hostname: ""
+  scheme: http
+  index: /
+  port_map: "3003"
+  author: self
+  category: self
+  icon: "https://img.icons8.com/?size=64&id=9uVrNMu3Zx1K&format=png"
+  title:
+    custom: Grafana & Prometheus
