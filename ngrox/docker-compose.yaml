@@ -2,8 +2,8 @@ version: '3.9'
 services:
   ngrok:
     # command: 'tcp juhdi.lan:4444'
-    # command: 'tcp juhdi.lan:22'
-    command: 'http --domain fitting-deciding-shark.ngrok-free.app juhdi.lan:80'
+    command: 'tcp juhdi.lan:22'
+    # command: 'http --domain fitting-deciding-shark.ngrok-free.app juhdi.lan:80'
     # command: 'tunnel --label edge=edghts_2cdGnsmhytPKXO254PfaVbOsNss http://juhdi.lan:80'
     image: 'ngrok/ngrok:latest'
     ports:

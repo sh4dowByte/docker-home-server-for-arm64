@@ -8,8 +8,6 @@ services:
           memory: "335544320"
         limits:
           memory: 1865M
-    environment:
-      - TZ=Asia/Shanghai
     image: n8nio/n8n:1.16.0
     labels:
       icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/N8n/icon.png
@@ -18,6 +16,14 @@ services:
         published: "5678"
         protocol: tcp
     restart: unless-stopped
+    environment:
+      - TZ=Asia/Shanghai
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=user
+      - N8N_BASIC_AUTH_PASSWORD=password
+      - N8N_PROTOCOL=https
+      - N8N_HOST=workflow.juhdi.my.id
+      - WEBHOOK_URL=https://workflow.juhdi.my.id
     volumes:
       - type: bind
         source: /DATA/AppData/n8n/.n8n

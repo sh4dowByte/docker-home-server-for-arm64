@@ -1,0 +1,41 @@
+name: kal-linux
+services:
+  kali:
+    container_name: kali
+    build:
+        context: .
+        args:
+          - METASPLOIT=${METASPLOIT}
+    stdin_open: true
+    tty: true
+    ports: []
+    volumes:
+      - /home/pentest:/home
+    devices: []
+    cap_add: []
+    command: []
+    environment: []
+    networks:
+      - kali_network
+    privileged: false
+    restart: unless-stopped
+    hostname: kali
+    cpu_shares: 90
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+networks:
+  kali_network:
+    name: kal-linux_kali_network
+    driver: bridge
+x-casaos:
+  hostname: ""
+  scheme: http
+  index: /
+  port_map: ""
+  author: self
+  category: self
+  icon: "https://img.icons8.com/?size=64&id=qBWtR72kluCU&format=png"
+  title:
+    custom: Kali Linux
